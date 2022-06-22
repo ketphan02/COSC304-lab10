@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router({ mergeParams: true });
 const auth = require("../auth");
-const getQuery = require("../utils/getQuery");
+const { getQuery } = require("../utils/getQuery");
 const moment = require("moment");
 
 router.get("/", async (req, res) => {

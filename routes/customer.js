@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../auth");
-const getQuery = require("../utils/getQuery");
+const { getQuery } = require("../utils/getQuery");
 
 router.get("/", async (req, res) => {
   res.setHeader("Content-Type", "text/html");

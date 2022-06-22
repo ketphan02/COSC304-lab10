@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router({ mergeParams: true });
-const getQuery = require("../utils/getQuery");
+const { getQuery } = require("../utils/getQuery");
 const query = getQuery();
 
 router.get("/", async (req, res) => {

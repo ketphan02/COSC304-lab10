@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const getQuery = require("../utils/getQuery");
+const { getQuery } = require("../utils/getQuery");
 
 router.post("/", async (req, res) => {
   // Have to preserve async context since we make an async call

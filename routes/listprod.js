@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const getQuery = require("../utils/getQuery");
+const { getQuery } = require("../utils/getQuery");
 
 router.get("/", async (req, res) => {
   // Get the product name to search for
