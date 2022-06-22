@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getQuery } = require("../utils/getQuery");
+const { getQuery, getConnection } = require("../utils/getQuery");
 
 router.get("/", async (req, res) => {
   // Get the product name to search for
@@ -9,7 +9,9 @@ router.get("/", async (req, res) => {
 
   /** $name now contains the search string the user entered
      Use it to build a query and print out the results. **/
-  const query = getQuery();
+
+  const conn = getConnection();
+  const query = getQuery(conn);
   try {
     let baseQuery = `select productId, productName, productPrice from product`;
     const nameQuery = name && `productName like '%${name}%'`;
@@ -63,6 +65,7 @@ router.get("/", async (req, res) => {
   } catch (err) {
     console.error(err);
   }
+  conn.end();
 });
 
 module.exports = router;

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router({ mergeParams: true });
 const auth = require("../auth");
-const { getQuery } = require("../utils/getQuery");
+const { getQuery, getConnection } = require("../utils/getQuery");
 const moment = require("moment");
 
 router.get("/", async (req, res) => {
@@ -24,8 +24,9 @@ const salesReportRouter = express.Router({ mergeParams: true });
 router.use("/salereport", salesReportRouter);
 salesReportRouter.route("/").get(async (req, res) => {
   if (req.session.username) {
+    const conn = getConnection();
     try {
-      const query = getQuery();
+      const query = getQuery(conn);
       const result = await query(
         `select sum(totalAmount) as totalOrderedAmount, date(orderDate) as orderDate from ordersummary group by date(orderDate)`
       );
@@ -68,6 +69,7 @@ salesReportRouter.route("/").get(async (req, res) => {
     } catch (err) {
       console.dir(err);
     }
+    conn.end();
   } else {
     auth.checkAuthentication(req, res);
   }
@@ -77,8 +79,9 @@ const allCustomerRouter = express.Router({ mergeParams: true });
 router.use("/allcustomer", allCustomerRouter);
 allCustomerRouter.route("/").get(async (req, res) => {
   if (req.session.username) {
+    const conn = getConnection();
     try {
-      const query = getQuery();
+      const query = getQuery(conn);
       const result = await query(`select * from customer`);
       let customerTable =
         "<table><th>Customer ID</th><th>Customer Name</th><th>Customer Phone</th><th>Customer Email</th>";
@@ -96,6 +99,7 @@ allCustomerRouter.route("/").get(async (req, res) => {
     } catch (err) {
       console.dir(err);
     }
+    conn.end();
   } else {
     auth.checkAuthentication(req, res);
   }
@@ -107,8 +111,9 @@ productRouter.route("/").get(async (req, res) => {
   if (!req.session.username) {
     auth.checkAuthentication(req, res);
   }
+  const conn = getConnection();
   try {
-    const query = getQuery();
+    const query = getQuery(conn);
     const result = await query(`select * from product`);
     let productTable =
       "<table><tr><th>Product ID</th><th>Product Name</th><th>Product Price</th><th>Remove</th></tr>";
@@ -127,6 +132,7 @@ productRouter.route("/").get(async (req, res) => {
   } catch (err) {
     console.dir(err);
   }
+  conn.end();
 });
 
 productRouter.route("/add").get(async (req, res) => {
@@ -154,13 +160,14 @@ productRouter.route("/add").post(async (req, res) => {
   if (!req.session.username) {
     auth.checkAuthentication(req, res);
   }
+  const conn = getConnection();
   try {
     const productName = req.body.productName;
     const productPrice = parseInt(req.body.productPrice);
     const productDescription = req.body.productDescription || "";
     const productImageURL = req.body.productImageURL || "";
 
-    const query = getQuery();
+    const query = getQuery(conn);
     if (productPrice > 0) {
       await query(
         `insert into product (productName, productPrice, productDesc, productImageURL) values ('${productName}', ${productPrice}, '${productDescription}', '${productImageURL}')`
@@ -170,20 +177,23 @@ productRouter.route("/add").post(async (req, res) => {
   } catch (err) {
     console.dir(err);
   }
+  conn.end();
 });
 
 productRouter.route("/remove/:productId").get(async (req, res) => {
   if (!req.session.username) {
     auth.checkAuthentication(req, res);
   }
+  const conn = getConnection();
   try {
     const productId = req.params.productId;
-    const query = getQuery();
+    const query = getQuery(conn);
     await query(`delete from product where productId = '${productId}'`);
   } catch (err) {
     console.dir(err);
   }
   res.redirect("/admin/allproduct");
+  conn.end();
 });
 
 module.exports = router;

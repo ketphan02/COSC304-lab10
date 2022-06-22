@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getQuery } = require("../utils/getQuery");
-
+const { getQuery, getConnection } = require("../utils/getQuery");
 router.post("/", async (req, res) => {
   res.setHeader("Content-Type", "image/jpeg");
 
@@ -10,9 +9,9 @@ router.post("/", async (req, res) => {
   const rating = parseInt(req.body.rating);
   const review = req.body.review;
 
-  console.log(rating);
+  const conn = getConnection();
   try {
-    const query = getQuery();
+    const query = getQuery(conn);
 
     // data validation
     if (!(1 <= rating && rating <= 5)) {
@@ -31,6 +30,7 @@ router.post("/", async (req, res) => {
     console.error(err);
     console.dir(err);
   }
+  conn.end();
 });
 
 module.exports = router;

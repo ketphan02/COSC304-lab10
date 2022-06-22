@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router({ mergeParams: true });
-const { getQuery } = require("../utils/getQuery");
-const query = getQuery();
+const { getQuery, getConnection } = require("../utils/getQuery");
 
 router.get("/", async (req, res) => {
   let errMsg = "";
   let warehouseList;
+  const conn = getConnection();
+  const query = getQuery(conn);
   try {
     let warehouses = await query(`select * from warehouse`);
     // create a list of warehouse that navigate before when click
@@ -24,12 +25,15 @@ router.get("/", async (req, res) => {
     errMsg,
     username: req.session.username,
   });
+  conn.end();
 });
 
 router.get("/:warehouseId", async (req, res) => {
   let errMsg = "";
   const warehouseId = req.params.warehouseId;
   let itemList;
+  const conn = getConnection();
+  const query = getQuery(conn);
   try {
     const items = await query(`
       select * from productinventory inner join product using (productId) where warehouseId = '${warehouseId}'
@@ -43,6 +47,7 @@ router.get("/:warehouseId", async (req, res) => {
   } catch (err) {
     errMsg = err.message;
   }
+  conn.end();
 
   res.render("warehouseproduct", {
     title: `Kiet Phan Grocery Store - Warehouse ${warehouseId}`,
@@ -56,6 +61,8 @@ router.get("/:warehouseId", async (req, res) => {
 const addItemRouter = express.Router({ mergeParams: true });
 router.use("/add", addItemRouter);
 addItemRouter.route("/").post(async (req, res) => {
+  const conn = getConnection();
+  const query = getQuery(conn);
   try {
     const productId = req.body.productId;
     const warehouseId = req.body.warehouseId;
@@ -68,11 +75,14 @@ addItemRouter.route("/").post(async (req, res) => {
     console.dir(err);
     res.sendStatus(500);
   }
+  conn.end();
 });
 
 const deductItemRouter = express.Router({ mergeParams: true });
 router.use("/deduct", deductItemRouter);
 deductItemRouter.route("/").post(async (req, res) => {
+  const conn = getConnection();
+  const query = getQuery(conn);
   try {
     const productId = req.body.productId;
     const warehouseId = req.body.warehouseId;
@@ -85,6 +95,7 @@ deductItemRouter.route("/").post(async (req, res) => {
     console.dir(err);
     res.sendStatus(500);
   }
+  conn.end();
 });
 
 module.exports = router;

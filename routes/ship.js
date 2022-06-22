@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const moment = require("moment");
-const { getQuery } = require("../utils/getQuery");
+const { getQuery, getConnection } = require("../utils/getQuery");
 
 router.get("/", async (req, res) => {
   res.setHeader("Content-Type", "text/html");
@@ -10,12 +10,13 @@ router.get("/", async (req, res) => {
   const orderId = req.query.orderId;
 
   let errMsg;
+  const conn = getConnection();
   try {
     if (!orderId) {
       errMsg = "No order id provided";
       throw Error(errMsg);
     }
-    const query = getQuery();
+    const query = getQuery(conn);
     const orderInformation = (
       await query(`select * from ordersummary where orderId = ${orderId}`)
     )[0];
@@ -64,6 +65,7 @@ router.get("/", async (req, res) => {
       });
     }
   }
+  conn.end();
 });
 
 module.exports = router;

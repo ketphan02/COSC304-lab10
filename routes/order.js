@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { getQuery } = require("../utils/getQuery");
+const { getQuery, getConnection } = require("../utils/getQuery");
 
 router.get("/", async (req, res) => {
+  const conn = getConnection();
   res.setHeader("Content-Type", "text/html");
 
   const username = req.session.username;
@@ -14,7 +15,7 @@ router.get("/", async (req, res) => {
   if (req.session.productList && req.session.productList.length > 0) {
     productList = req.session.productList;
   }
-  const query = getQuery(productList);
+  const query = getQuery(conn);
   /**
     Determine if valid customer id was entered
     Determine if there are products in the shopping cart
@@ -106,6 +107,7 @@ router.get("/", async (req, res) => {
       resultMsg,
       errMsg,
     });
+    conn.end();
   }
 });
 

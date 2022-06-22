@@ -1,15 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const fs = require("fs");
-const { getQuery } = require("../utils/getQuery");
+const { getQuery, getConnection } = require("../utils/getQuery");
 
 router.get("/", async (req, res) => {
+  const conn = getConnection();
   try {
-    let query = getQuery();
-
-    // res.setHeader("Content-Type", "text/html");
-    // res.write("<title>Data Loader</title>");
-    // res.write("<h1>Connecting to database.</h1><p>");
+    let query = getQuery(conn);
 
     let data = fs.readFileSync("./data/data.ddl", { encoding: "utf8" });
     let commands = data.split(";");
@@ -27,6 +24,7 @@ router.get("/", async (req, res) => {
     console.dir(err);
     res.send(err);
   }
+  conn.end();
 });
 
 module.exports = router;

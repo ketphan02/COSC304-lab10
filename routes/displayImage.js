@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getQuery } = require("../utils/getQuery");
+const { getQuery, getConnection } = require("../utils/getQuery");
 
 router.get("/", async (req, res) => {
   res.setHeader("Content-Type", "image/jpeg");
@@ -12,8 +12,9 @@ router.get("/", async (req, res) => {
     return;
   }
 
+  const conn = getConnection();
   try {
-    const query = getQuery();
+    const query = getQuery(conn);
     const result = await query(
       `select productImage from product where productId = ${idVal}`
     );
@@ -32,6 +33,7 @@ router.get("/", async (req, res) => {
   } finally {
     res.end();
   }
+  conn.end();
 });
 
 module.exports = router;

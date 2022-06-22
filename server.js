@@ -24,7 +24,7 @@ let warehouse = require("./routes/warehouse");
 const { getPool } = require("./utils/getQuery");
 
 const app = express();
-
+getPool();
 // Enable parsing of requests for POST requests
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -74,8 +74,6 @@ app.use("/customer", customer);
 app.use("/ship", ship);
 app.use("/addreview", addreview);
 app.use("/warehouse", warehouse);
-
-getPool();
 
 // Starting our Express app
 const PORT = process.env.PORT || 3000;

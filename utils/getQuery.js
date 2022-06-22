@@ -17,11 +17,15 @@ const dbConfig = {
 //   insecureAuth : true
 // };
 
-const getQuery = () => {
+const getConnection = () => {
   const conn = mysql.createConnection(dbConfig);
+  return conn;
+};
+
+const getQuery = (conn) => {
   const query = util.promisify(conn.query).bind(conn);
   return query;
-};
+}
 
 const getPool = () => {
   let pool = mysql.createPool(dbConfig);
@@ -35,6 +39,7 @@ const getPool = () => {
 };
 
 module.exports = {
+  getConnection,
   getQuery,
   getPool,
 };

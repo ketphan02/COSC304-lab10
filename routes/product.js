@@ -1,12 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const { getQuery } = require("../utils/getQuery");
+const { getQuery, getConnection } = require("../utils/getQuery");
 
 router.get("/", async (req, res) => {
   const productId = parseInt(req.query.productId);
   const username = req.session.username;
+
+  const conn = getConnection();
   try {
-    const query = getQuery();
+    const query = getQuery(conn);
     // write query
     const result = (
       await query(`select * from product where productid=${productId} limit 1`)
@@ -36,9 +38,11 @@ router.get("/", async (req, res) => {
     let customerId;
     try {
       if (username) {
-        customerId = (await query(
-          `select customerId from customer where userid='${username}'`
-        ))[0].customerId;
+        customerId = (
+          await query(
+            `select customerId from customer where userid='${username}'`
+          )
+        )[0].customerId;
 
         const numReviews = (
           await query(
@@ -59,10 +63,8 @@ router.get("/", async (req, res) => {
     }
 
     const reviews = [];
-    const allReviews = (
-      await query(
-        `select reviewRating, reviewComment, userid from review inner join customer using (customerId) where productId=${productId} order by reviewDate desc`
-      )
+    const allReviews = await query(
+      `select reviewRating, reviewComment, userid from review inner join customer using (customerId) where productId=${productId} order by reviewDate desc`
     );
     allReviews.forEach((row) => {
       reviews.push({
@@ -83,11 +85,12 @@ router.get("/", async (req, res) => {
       continueShopping,
       canAddReview,
       reviews,
-      customerId
+      customerId,
     });
   } catch (err) {
     console.dir(err);
   }
+  conn.end();
 });
 
 module.exports = router;

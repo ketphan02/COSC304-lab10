@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../auth");
-const { getQuery } = require("../utils/getQuery");
+const { getQuery, getConnection } = require("../utils/getQuery");
 
 router.get("/", async (req, res) => {
   res.setHeader("Content-Type", "text/html");
@@ -9,9 +9,10 @@ router.get("/", async (req, res) => {
   if (!req.session.username) {
     auth.checkAuthentication(req, res);
   }
+  const conn = getConnection();
 
   try {
-    const query = getQuery();
+    const query = getQuery(conn);
     const result = (await query(
       `select * from customer where userid='${req.session.username}'`
     ))[0];
@@ -36,6 +37,7 @@ router.get("/", async (req, res) => {
   } catch (err) {
     console.dir(err);
   }
+  conn.end();
 });
 
 module.exports = router;

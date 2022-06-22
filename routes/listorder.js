@@ -1,14 +1,16 @@
 const express = require("express");
 const router = express.Router();
 const moment = require("moment");
-const { getQuery } = require("../utils/getQuery");
+const { getQuery, getConnection } = require("../utils/getQuery");
 
 router.get("/", async (req, res) => {
   res.setHeader("Content-Type", "text/html");
   res.write("<title>Kiet Phan Grocery Order List</title>");
 
   /** Create connection, and validate that it connected successfully **/
-  const query = getQuery();
+
+  const conn = getConnection();
+  const query = getQuery(conn);
   const result = await query(
     `select orderId, orderDate, totalAmount, shiptoAddress as address, shiptoCity as city, shiptoState as state, shiptoPostalCode as zip, shiptoCountry as country, customerId from ordersummary`
   );
@@ -34,23 +36,8 @@ router.get("/", async (req, res) => {
     res.write("</table>");
   }
 
-  /**
-    Useful code for formatting currency:
-        let num = 2.87879778;
-        num = num.toFixed(2);
-    **/
-
-  /** Write query to retrieve all order headers **/
-
-  /** For each order in the results
-            Print out the order header information
-            Write a query to retrieve the products in the order
-
-            For each product in the order
-                Write out product information 
-    **/
-
   res.end();
+  conn.end();
 });
 
 module.exports = router;
