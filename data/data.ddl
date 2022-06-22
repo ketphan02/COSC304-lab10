@@ -212,7 +212,7 @@ SET @prod27 = LAST_INSERT_ID();
 INSERT product(productName, categoryId, productDesc, productPrice) VALUES ('Louisiana Fiery Hot Pepper Sauce',@cat2,'32 - 8 oz bottles',21.05);
 SET @prod28 = LAST_INSERT_ID();
 INSERT product(productName, categoryId, productDesc, productPrice) VALUES ('Laughing Lumberjack Lager',@cat1,'24 - 12 oz bottles',14.00);
-SET @prod29 = LAST_INSERT_ID();
+SET @prod = LAST_INSERT_ID();
 
 INSERT INTO warehouse(warehouseName) VALUES ('Main warehouse');
 SET @warehouse1 = LAST_INSERT_ID();

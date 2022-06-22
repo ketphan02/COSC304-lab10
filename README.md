@@ -13,4 +13,4 @@ type cosc304 for password
 ```
 
 ## Deployed
-
+https://cosc304-lab10.herokuapp.com
