@@ -11,3 +11,6 @@ type cosc304 for password
 > exit
 > docker-compose up app --build
 ```
+
+## Deployed
+
