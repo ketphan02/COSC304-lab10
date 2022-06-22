@@ -1,0 +1,74 @@
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {{! <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> }}
+    <style>
+      * { box-sizing: border-box; padding: 0; margin: 0; } .header {
+      background-color: #f1f1f1; padding: 20px; text-align: center; display:
+      flex; justify-content: space-between; }
+    </style>
+  </head>
+
+  <body>
+    {{#if username}}
+      <div class="header"><h3><a href="/">Home</a></h3><h3>User:
+          {{username}}</h3><h3><a href="/listprod">Begin Shopping</a></h3><h3><a
+            href="/listorder"
+          >List All Orders</a></h3><h3><a href="/customer">Customer Info</a></h3><h3
+        ><a href="/admin">Administrators</a></h3><h3><a href="/logout">Log out</a></h3></div>
+    {{else}}
+      <div class="header"><h3><a href="/">Home</a></h3><h3><a
+            href="/login"
+          >Login</a></h3><h3><a href="/listprod">Begin Shopping</a></h3><h3><a
+            href="/listorder"
+          >List All Orders</a></h3><h3><a href="/customer">Customer Info</a></h3><h3
+        ><a href="/admin">Administrators</a></h3></div>
+    {{/if}}
+    <h1>{{{productName}}}</h1>
+    <div class="product-info-container">
+      {{{productImage}}}
+      <div>
+        <p>Description: {{{productDescription}}}</p>
+        <span>Product ID: {{{productId}}}</span>
+        <span>Price: ${{{productPrice}}}</span>
+      </div>
+      {{{addToCart}}}
+      {{{continueShopping}}}
+    </div>
+    <br/>
+    <br/>
+    <div class="review-container">
+      <h2>Reviews</h2>
+      <br/>
+      {{#if canAddReview}}
+        {{#if customerId}}
+          <form action="/addreview" method="POST" class="review-form">
+            <input type="hidden" name="productId" value="{{{productId}}}" />
+            <input type="hidden" name="customerId" value="{{{customerId}}}" />
+            <input type="number" name="rating" placeholder="Rating from 1-5" />
+            <input type="text" name="review" placeholder="Write a review" />
+            <input type="submit" value="Submit" />
+            <input type="reset" value="Reset" />
+          </form>
+        {{/if}}
+      {{else}}
+        You are not logged in or have not bought this product.
+      {{/if}}
+      <br />
+
+      {{#each reviews}}
+        <div class="review-item">
+          <div>
+            {{this.star}} stars
+          </div>
+          <div>
+            {{this.username}}: {{this.review}}
+          </div>
+          <br />
+        </div>
+      {{/each}}
+    </div>
+  </body>
+</html>

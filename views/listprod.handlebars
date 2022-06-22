@@ -1,0 +1,56 @@
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <style>
+      * { box-sizing: border-box; padding: 0; margin: 0; } .header {
+      background-color: #f1f1f1; padding: 20px; text-align: center; display:
+      flex; justify-content: space-between; } .product-container,
+      .search-container { padding: 0 10rem; margin-top: 1rem; display: flex;
+      flex-direction: column; text-align: center; } .productTable
+      tr:nth-child(odd) td { background-color: #f1f1f1; padding: 0 1rem; }
+
+    </style>
+
+  </head>
+
+  <body>
+    {{#if username}}
+      <div class="header"><h3><a href="/">Home</a></h3><h3>User:
+          {{username}}</h3><h3><a href="/listprod">Begin Shopping</a></h3><h3><a
+            href="/listorder"
+          >List All Orders</a></h3><h3><a href="/customer">Customer Info</a></h3><h3
+        ><a href="/admin">Administrators</a></h3><h3><a href="/logout">Log out</a></h3></div>
+    {{else}}
+      <div class="header"><h3><a href="/">Home</a></h3><h3><a
+            href="/login"
+          >Login</a></h3><h3><a href="/listprod">Begin Shopping</a></h3><h3><a
+            href="/listorder"
+          >List All Orders</a></h3><h3><a href="/customer">Customer Info</a></h3><h3
+        ><a href="/admin">Administrators</a></h3></div>
+    {{/if}}
+    <title>Kiet Phan Grocery</title>
+    <div>
+      <div class="search-container">
+        <h1>Search product</h1>
+        <br />
+        <form action="/listprod">
+          <input type="text" id="pname" name="productName" />
+          <input type="text" id="pcat" name="productCategory" />
+          <input type="submit" value="Submit" />
+          <input type="submit" value="Reset" />
+        </form>
+        <br />
+      </div>
+    </div>
+    <div class="product-container">
+      {{{listProdHeader}}}
+      {{{productTable}}}
+    </div>
+  </body>
+
+</html>

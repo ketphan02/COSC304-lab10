@@ -1,0 +1,85 @@
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <style>
+      table, th, td { border: 1px solid; }
+    </style>
+
+    <style>
+      * { box-sizing: border-box; padding: 0; margin: 0; } .header {
+      background-color: #f1f1f1; padding: 20px; text-align: center; display:
+      flex; justify-content: space-between; } .product-container,
+      .search-container { padding: 0 10rem; margin-top: 1rem; display: flex;
+      flex-direction: column; text-align: center; } .productTable
+      tr:nth-child(odd) td { background-color: #f1f1f1; padding: 0 1rem; }
+
+    </style>
+  </head>
+
+  <body>
+    {{#if username}}
+      <div class="header"><h3><a href="/">Home</a></h3><h3>User:
+          {{username}}</h3><h3><a href="/listprod">Begin Shopping</a></h3><h3><a
+            href="/listorder"
+          >List All Orders</a></h3><h3><a href="/customer">Customer Info</a></h3><h3
+        ><a href="/admin">Administrators</a></h3><h3><a href="/logout">Log out</a></h3></div>
+    {{else}}
+      <div class="header"><h3><a href="/">Home</a></h3><h3><a
+            href="/login"
+          >Login</a></h3><h3><a href="/listprod">Begin Shopping</a></h3><h3><a
+            href="/listorder"
+          >List All Orders</a></h3><h3><a href="/customer">Customer Info</a></h3><h3
+        ><a href="/admin">Administrators</a></h3></div>
+    {{/if}}
+    <title>{{title}}</title>
+    <h1>{{title}}</h1>
+    {{#if errMsg}}
+      <h1>{{errMsg}}</h1>
+    {{else}}
+      {{{itemList}}}
+    {{/if}}
+  </body>
+  <script>
+    $('#warehouse-table > tbody > tr').each((index, _) => {
+      $(`#deductItemBtn-${index}`).click(() => {
+        const productId = $(`#productId-${index}`).text();
+        $.ajax({
+          url: `/warehouse/deduct`,
+          type: 'POST',
+          data: {
+            productId: productId,
+            warehouseId: {{warehouseId}},
+          },
+          success: (data) => {
+            console.log(data);
+            location.reload();
+          }
+        });
+      });
+
+      $(`#addItemBtn-${index}`).click(() => {
+        const productId = $(`#productId-${index}`).text();
+        $.ajax({
+          url: `/warehouse/add`,
+          type: 'POST',
+          data: {
+            productId: productId,
+            warehouseId: {{warehouseId}},
+          },
+          success: (data) => {
+            console.log(data);
+            location.reload();
+          }
+        });
+      });
+    })
+  </script>
+
+</html>
