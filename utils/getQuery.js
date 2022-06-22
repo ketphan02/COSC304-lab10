@@ -6,7 +6,7 @@ const dbConfig = {
   password: "73e280c9",
   host: "us-cdbr-east-05.cleardb.net",
   database: "heroku_c245386d7bb3360",
-  insecureAuth : true
+  insecureAuth: true,
 };
 
 // const dbConfig = {
@@ -23,5 +23,18 @@ const getQuery = () => {
   return query;
 };
 
+const getPool = () => {
+  let pool = mysql.createPool(dbConfig);
 
-module.exports = getQuery;
+  pool.on("connection", (_conn) => {
+    if (_conn) {
+      logger.info("Connected the database via threadId %d!!", _conn.threadId);
+      _conn.query("SET SESSION auto_increment_increment=1");
+    }
+  });
+};
+
+module.exports = {
+  getQuery,
+  getPool,
+};

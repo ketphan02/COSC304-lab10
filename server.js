@@ -21,6 +21,7 @@ let customer = require("./routes/customer");
 let ship = require("./routes/ship");
 let addreview = require("./routes/addreview");
 let warehouse = require("./routes/warehouse");
+const { getPool } = require("./utils/getQuery");
 
 const app = express();
 
@@ -74,8 +75,9 @@ app.use("/ship", ship);
 app.use("/addreview", addreview);
 app.use("/warehouse", warehouse);
 
-// Starting our Express app
+getPool();
 
+// Starting our Express app
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
