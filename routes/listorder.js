@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
   const conn = getConnection();
   const query = getQuery(conn);
   const result = await query(
-    `select orderId, orderDate, totalAmount, shiptoAddress as address, shiptoCity as city, shiptoState as state, shiptoPostalCode as zip, shiptoCountry as country, customerId from ordersummary inner join customer using (customerId) where userId='${req.session.username}'`
+    `select orderId, orderDate, totalAmount, shiptoAddress as address, shiptoCity as city, shiptoState as state, shiptoPostalCode as zip, shiptoCountry as country, customerId from ordersummary inner join customer using (customerId) where userid='${req.session.username}'`
   );
 
   if (!result) {
