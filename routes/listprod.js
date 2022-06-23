@@ -15,7 +15,7 @@ router.get("/", async (req, res) => {
   try {
     let baseQuery = `select productId, productName, productPrice from product`;
     const nameQuery = name && `productName like '%${name}%'`;
-    const categoryQuery = category && `productCategory like '%${category}%'`;
+    const categoryQuery = category && `categoryName like '%${category}%'`;
     if (nameQuery && categoryQuery) {
       baseQuery += ` where ${nameQuery} and ${categoryQuery};`;
     } else if (nameQuery) {
