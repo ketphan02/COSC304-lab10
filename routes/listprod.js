@@ -13,7 +13,7 @@ router.get("/", async (req, res) => {
   const conn = getConnection();
   const query = getQuery(conn);
   try {
-    let baseQuery = `select productId, productName, productPrice from product`;
+    let baseQuery = `select productId, productName, productPrice from product inner join category using (categoryId)`;
     const nameQuery = name && `productName like '%${name}%'`;
     const categoryQuery = category && `categoryName like '%${category}%'`;
     if (nameQuery && categoryQuery) {
